@@ -11,7 +11,7 @@ async def update_tomorrow_menu(dp,
     for admin in dp.bot.get('config').tg_bot.admin_ids:
         await dp.bot.send_message(chat_id=admin,
                                   text=message,
-                                  reply_markup=get_menu_notification_inline_kb())
+                                  reply_markup=get_menu_notification_inline_kb(target='tomorrow'))
 
 
 async def update_today_menu(dp,
@@ -19,7 +19,7 @@ async def update_today_menu(dp,
     for admin in dp.bot.get('config').tg_bot.admin_ids:
         await dp.bot.send_message(chat_id=admin,
                                   text=message,
-                                  reply_markup=get_menu_notification_inline_kb())
+                                  reply_markup=get_menu_notification_inline_kb(target='today'))
 
 
 async def scheduler(dp: Dispatcher):

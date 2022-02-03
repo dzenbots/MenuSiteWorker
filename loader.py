@@ -11,13 +11,7 @@ from peewee import SqliteDatabase
 from data.config import load_config, PostgresConfig, SqliteConfig, Config
 from utils.db_api.postgresql_api import db as postgres_db
 
-logger = logging.getLogger(__name__)
 
-logging.basicConfig(
-    level=logging.INFO,
-    format=u'%(filename)s:%(lineno)d #%(levelname)-8s [%(asctime)s] - %(name)s - %(message)s',
-)
-logger.info("Starting bot")
 config = load_config(".env")
 
 storage = RedisStorage2() if config.tg_bot.use_redis else MemoryStorage()

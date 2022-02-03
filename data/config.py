@@ -32,9 +32,49 @@ class GoogleConfig:
 
 
 @dataclass
+class FilesConfig:
+    tomorrow_folder_path: str
+    today_folder_path: str
+    local_dir_path: str
+    local_dir_compressed_path: str
+    mail_folder_name: str
+
+
+@dataclass
+class SchoolSiteAuth:
+    base_addr: str
+    login: str
+    password: str
+    root_folder: str
+
+
+@dataclass
+class SchedulerConfig:
+    time_for_tomorrow: str
+    time_for_today: str
+
+
+@dataclass
+class PyLovePDF_Keys:
+    key1: str
+    key2: str
+
+
+@dataclass
+class MailAuth:
+    login: str
+    password: str
+    imap_server: str
+
+
+@dataclass
 class Miscellaneous:
+    pdf_keys: PyLovePDF_Keys
+    scheduler: SchedulerConfig
+    school_auth: SchoolSiteAuth
+    files_paths: FilesConfig
+    mail_auth: MailAuth
     google_config: GoogleConfig = None
-    other_params: str = None
 
 
 @dataclass
@@ -76,6 +116,32 @@ def load_config(path: str = None):
             filename=env.str("SQLITE_DB_FILENAME")
         ) if db_type == "SQLITE" else None,
         misc=Miscellaneous(
+            files_paths=FilesConfig(
+                tomorrow_folder_path=env.str("TOMORROW_MENU_FOLDER_PATH_IN_SITE_STORAGE"),
+                today_folder_path=env.str("TODAY_MENU_FOLDER_PATH_IN_SITE_STORAGE"),
+                local_dir_path=env.str("DIRECTORY_TO_SAVE_FILES"),
+                local_dir_compressed_path=env.str("DIRECTORY_TO_SAVE_COMMPRESSED_FILES"),
+                mail_folder_name=env.str("MENU_FOLDER_NAME_IN_MAIL_BOX"),
+            ),
+            pdf_keys=PyLovePDF_Keys(
+                key1=env.str("PYLOVEPDF_API_KEY1"),
+                key2=env.str("PYLOVEPDF_API_KEY2")
+            ),
+            scheduler=SchedulerConfig(
+                time_for_tomorrow=env.str("TOMORROW_MENU_REPLACING_TIME"),
+                time_for_today=env.str("TODAY_MENU_REPLACING_TIME")
+            ),
+            school_auth=SchoolSiteAuth(
+                base_addr=env.str("BASE_SCHOOL_SITE_ADDR"),
+                login=env.str("SITE_LOGIN"),
+                password=env.str("SITE_PASSWORD"),
+                root_folder=env.str("ROOT_FOLDER"),
+            ),
+            mail_auth=MailAuth(
+                login=env.str("MAIL_LOGIN"),
+                password=env.str("MAIL_PASSWORD"),
+                imap_server=env.str("MAIL_IMAP_SERVER"),
+            ),
             google_config=GoogleConfig(
                 google_scoped_credentials=get_scoped_credentials(
                     credentials=Credentials.from_service_account_file(env.str('GOOGLE_CREDENTIALS_FILE')),

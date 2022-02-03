@@ -13,5 +13,5 @@ async def bot_start(message: types.Message):
 
 @dp.message_handler(CommandStart())
 async def bot_start(message: types.Message):
-    await set_user_commands(chat_id=message.from_user.full_name)
+    await set_user_commands(dp=dp, chat_id=message.from_user.full_name)
     await message.answer(f"Привет, {message.from_user.full_name}!")

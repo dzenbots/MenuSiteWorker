@@ -18,10 +18,11 @@ async def tomorrow_command(message: Message):
 
 
 @dp.callback_query_handler(site_admin_callbacks.filter(function='update', target='tomorrow'),
-                           chat_type_callback='private')
+                           chat_type='private')
 async def update_tomorrow_menu_notification(call: CallbackQuery):
     await call.answer(cache_time=1)
     await dp.bot.edit_message_text(chat_id=call.message.chat.id,
                                    message_id=call.message.message_id,
                                    text='Обновление завтрашнего меню в процессе. Ожидайте')
     await update_tomorrow(call, dp)
+    await dp.bot.edit_message_text(text='Файлы обновлены', chat_id=call.message.chat.id, message_id=msg.message_id)

@@ -14,7 +14,7 @@ async def tomorrow_command(message: Message):
     # sw = SiteWorker(site_auth=dp.bot.get('config').misc.school_auth,
     #                 folder_paths=dp.bot.get('config').misc.files_paths)
     # sw.copy_tomorrow_today()
-    update_tomorrow(dp=dp)
+    await update_tomorrow(dp=dp, message=message)
     await dp.bot.edit_message_text(text='Файлы обновлены', chat_id=message.chat.id, message_id=msg.message_id)
 
 
@@ -25,5 +25,6 @@ async def update_tomorrow_menu_notification(call: CallbackQuery):
     await dp.bot.edit_message_text(chat_id=call.message.chat.id,
                                    message_id=call.message.message_id,
                                    text='Обновление завтрашнего меню в процессе. Ожидайте')
-    update_tomorrow(dp=dp)
-    await dp.bot.edit_message_text(text='Файлы обновлены', chat_id=call.message.chat.id, message_id=msg.message_id)
+    await update_tomorrow(dp=dp, message=call.message)
+    await dp.bot.edit_message_text(text='Файлы обновлены', chat_id=call.message.chat.id,
+                                   message_id=call.message.message_id)

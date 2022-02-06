@@ -20,7 +20,8 @@ def get_menu_notification_inline_kb(target: str):
                 InlineKeyboardButton(
                     text='❌ Отмена',
                     callback_data=site_admin_callbacks.new(
-                        function='cancel'
+                        function='cancel',
+                        target='_'
                     )
                 )
             ]

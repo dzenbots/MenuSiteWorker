@@ -72,7 +72,9 @@ class MailWorker:
         else:
             return False
 
-    def select_folder(self, folder_name):
+    def select_folder(self, folder_name=None):
+        if folder_name is None:
+            folder_name = self.menu_folder_name
         status, data = self.mail.select(imaputf7encode(folder_name))
         if status == 'OK':
             return True

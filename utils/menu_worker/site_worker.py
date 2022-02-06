@@ -1,6 +1,11 @@
+import os
+import random
+import string
+
 import requests
 from bs4 import BeautifulSoup
 from loguru import logger
+from requests_toolbelt import MultipartEncoder
 
 from data.config import SchoolSiteAuth, FilesConfig
 from utils.db_api.sqlite_api import SchoolStorageItem
@@ -105,3 +110,59 @@ class SiteWorker(requests.Session):
                                          'src': src_folder.hash
                                      },
                                      headers={'Content-Type': 'application/json'})
+
+    def delete_all_in_folder(self, folder_path):
+        folder_info = self.get_target_folder_id(base_url=self.base_url, folder_path=folder_path)
+        while True:
+            try:
+                self.response = self.get(url=self.base_url + '/efconnect/files', params={
+                    'cmd': 'open',
+                    'target': folder_info.hash
+                })
+            except requests.exceptions.RequestException:
+                print('.', end='')
+            if self.response.status_code == 200:
+                break
+
+        target_files = {item.get('name'): item.get('hash') for item in self.response.json().get('files')}
+        for file_name, hash in target_files.items():
+            self.response = self.get(url=self.base_url + '/efconnect/files', params={
+                'cmd': 'rm',
+                'targets[]': hash
+            })
+
+    def upload_files(self, folder_path, files):
+        folder_info = self.get_target_folder_id(base_url=self.base_url, folder_path=folder_path)
+        if folder_info:
+            for file_path in files:
+                self.process_uploading(folder_id=folder_info.hash, file_path=file_path)
+
+    def process_uploading(self, folder_id, file_path):
+        filename = os.path.basename(file_path)
+        while True:
+            try:
+                self.response = self.get(url=self.base_url + '/efconnect/files', params={
+                    'cmd': 'upload',
+                    'target': folder_id
+                })
+            except requests.exceptions.RequestException:
+                logger.info(f'Some trouble while uploading file {filename}')
+            if self.response.status_code == 200:
+                break
+        multipart = MultipartEncoder(fields={
+            'cmd': 'upload',
+            'target': folder_id,
+            'suffix': '~',
+            'upload[]': (f'{filename}', open(file_path, 'rb'), 'application/pdf'),
+            'uploading_path[]': ''
+        }, boundary='----WebKitFormBoundary' + ''.join(random.sample(string.ascii_letters + string.digits, 16)))
+        try:
+            self.response = self.post(url=self.base_url + '/efconnect/files',
+                                      data=multipart,
+                                      headers={'Content-Type': multipart.content_type})
+        except requests.exceptions.RequestException:
+            logger.info(f'Some trouble while uploading file {filename}')
+        if self.response.status_code == 200:
+            return True
+
+

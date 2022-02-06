@@ -15,7 +15,7 @@ async def today_command(message: Message):
     await dp.bot.edit_message_text(text='Файлы обновлены', chat_id=message.chat.id, message_id=msg.message_id)
 
 
-@dp.callback_query_handler(site_admin_callbacks.filter(function='update', target='today'),
+@dp.callback_query_handler(site_admin_callbacks.filter(function='update_today'),
                            chat_type='private')
 async def update_today_menu_notification(call: CallbackQuery):
     await call.answer(cache_time=1)

@@ -1,7 +1,7 @@
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 from aiogram.utils.callback_data import CallbackData
 
-site_admin_callbacks = CallbackData('Site_admin', 'function', 'target')
+site_admin_callbacks = CallbackData('Site_admin', 'function')
 
 
 def get_menu_notification_inline_kb(target: str):
@@ -11,8 +11,7 @@ def get_menu_notification_inline_kb(target: str):
                 InlineKeyboardButton(
                     text='✅ Обновить',
                     callback_data=site_admin_callbacks.new(
-                        function='update',
-                        target=target
+                        function=target
                     )
                 )
             ],
@@ -20,8 +19,7 @@ def get_menu_notification_inline_kb(target: str):
                 InlineKeyboardButton(
                     text='❌ Отмена',
                     callback_data=site_admin_callbacks.new(
-                        function='cancel',
-                        target='_'
+                        function='cancel'
                     )
                 )
             ]

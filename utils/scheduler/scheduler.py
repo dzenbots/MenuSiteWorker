@@ -11,15 +11,15 @@ async def update_tomorrow_menu(dp,
     for admin in dp.bot.get('config').tg_bot.admin_ids:
         await dp.bot.send_message(chat_id=admin,
                                   text=message,
-                                  reply_markup=get_menu_notification_inline_kb(target='tomorrow'))
+                                  reply_markup=get_menu_notification_inline_kb(target='update_tomorrow'))
 
 
 async def update_today_menu(dp,
-                            message='Обновитьсегодняшнее меню?'):
+                            message='Обновить сегодняшнее меню?'):
     for admin in dp.bot.get('config').tg_bot.admin_ids:
         await dp.bot.send_message(chat_id=admin,
                                   text=message,
-                                  reply_markup=get_menu_notification_inline_kb(target='today'))
+                                  reply_markup=get_menu_notification_inline_kb(target='update_today'))
 
 
 async def scheduler(dp: Dispatcher):

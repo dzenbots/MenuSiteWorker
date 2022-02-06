@@ -74,7 +74,7 @@ async def update_tomorrow(dp: Dispatcher, message: Message):
                                    reply_markup=None)
 
 
-async def update_today(dp: Dispatcher):
+def update_today(dp: Dispatcher):
     sw = SiteWorker(site_auth=dp.bot.get('config').misc.school_auth,
                     folder_paths=dp.bot.get('config').misc.files_paths)
     sw.copy_tomorrow_today()

@@ -1,9 +1,14 @@
+import asyncio
+
 from aiogram import executor
 from gino import Gino
 from loguru import logger
 from peewee import SqliteDatabase
 
 from loader import dp
+import middlewares
+import filters
+import handlers
 from utils.db_api.postgresql_api import on_startup_postresql, on_shutdown_postresql
 from utils.db_api.sqlite_api import on_startup_sqlite, on_shutdown_sqlite
 from utils.notify_admins import on_startup_notify, on_shutdown_notify
@@ -18,13 +23,10 @@ async def on_startup(dispatcher):
         if isinstance(dispatcher.bot['database'], Gino):
             await on_startup_postresql(dispatcher)
 
-    import middlewares
-    import filters
-    import handlers
-
-    await scheduler(dp=dp)
     # Уведомляет про запуск и устанавливаем команды
     await on_startup_notify(dispatcher)
+
+    asyncio.create_task(scheduler(dp=dp))
 
 
 async def on_shutdown(dispatcher):

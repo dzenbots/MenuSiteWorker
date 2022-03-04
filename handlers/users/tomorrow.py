@@ -1,3 +1,4 @@
+from aiogram.dispatcher.filters import Command
 from aiogram.types import Message, CallbackQuery
 
 from keyboards.inline.menu_notification import site_admin_callbacks
@@ -5,14 +6,18 @@ from loader import dp
 from utils.menu_worker.menu_updater import update_tomorrow
 
 
-@dp.message_handler(state="*",
-                    commands=['tomorrow'],
+class CommandTomorrow(Command):
+
+    def __init__(self):
+        super().__init__(['tomorrow'])
+
+
+@dp.message_handler(CommandTomorrow(),
                     is_admin=True,
                     chat_type='private')
 async def tomorrow_command(message: Message):
-    msg = await message.answer(text='Дождитесь окончания обработки файлов')
+    await message.answer(text='Дождитесь окончания обработки файлов')
     await update_tomorrow(dp=dp, message=message)
-    await dp.bot.edit_message_text(text='Файлы обновлены', chat_id=message.chat.id, message_id=msg.message_id)
 
 
 @dp.callback_query_handler(site_admin_callbacks.filter(function='update_tomorrow'),

@@ -1,6 +1,7 @@
 import datetime
 import email
 import imaplib
+import re
 import shlex
 from dataclasses import dataclass
 from email.header import decode_header, make_header
@@ -52,6 +53,7 @@ class MailWorker:
 
     @staticmethod
     def get_message_subject(subject: str):
+        subject = re.sub(" +", " ", subject)
         fields = subject.replace('  ', ' ').split(' ')
         if len(fields) == 3:
             date = fields[2].rstrip('.pdf').split('.')

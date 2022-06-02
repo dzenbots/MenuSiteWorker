@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import Any, Union
+from typing import Any, Union, List
 
 from environs import Env
 from google.oauth2.service_account import Credentials
@@ -21,7 +21,7 @@ class PostgresConfig:
 @dataclass
 class TgBot:
     token: str
-    admin_ids: list[int]
+    admin_ids: List[int]
     use_redis: bool
 
 

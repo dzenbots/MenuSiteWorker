@@ -24,5 +24,7 @@ class PdfCompressor:
         self.compressor.download()
         file_src = './temp/' + os.listdir('./temp')[0]
         file_destination = output_directory_path + '/' + os.path.basename(filepath)
+        if os.path.exists(file_destination):
+            os.remove(file_destination)
         os.rename(file_src, file_destination)
         self.compressor.delete_current_task()
